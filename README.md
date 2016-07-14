@@ -1,5 +1,13 @@
-https://cdz-inquiry-timeseries-service.run.aws-usw02-pr.ice.predix.io/services/pm25services/weekly_data/sensor_id/{id}
+Test if it is OK
+==================================================
+https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/ping
 
+API
+==================================================
+https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/tags
+https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/weekly_data/{id}
+https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/yearly_data/{id}
+https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/latest_data/{id}
 
 Predix Development Kit Winddata Time Series Service
 ==================================================
