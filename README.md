@@ -6,9 +6,9 @@ API
 ==================================================
 https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/tags
 
-https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/weekly_data/{id}
+https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/raw_data/{id}
 
-https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/yearly_data/{id}
+https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/aggregated_data/{id}
 
 https://inquiry-driver-cdz.run.aws-usw02-pr.ice.predix.io/services/driver/latest_data/{id}
 

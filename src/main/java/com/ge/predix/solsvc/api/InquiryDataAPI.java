@@ -44,8 +44,8 @@ public interface InquiryDataAPI
 	 * @return -
 	 */
 	@GET
-	@Path("/yearly_data/{id}")
-	public Response getYearlyDataPoints(@PathParam("id") String id,
+	@Path("/aggregated_data/{id}")
+	public Response getAggregationDataPoints(@PathParam("id") String id,
 			@HeaderParam(value = "Authorization") String authorization,
 			@DefaultValue("1y-ago") @QueryParam("starttime") String starttime,
 			@DefaultValue("10000") @QueryParam("taglimit") String tagLimit,@DefaultValue("asc") @QueryParam("order") String tagorder);
@@ -61,8 +61,8 @@ public interface InquiryDataAPI
 	 * @return -
 	 */
 	@GET
-	@Path("/weekly_data/{id}")
-	public Response getWeeklyDataPoints(@PathParam("id") String id,
+	@Path("/raw_data/{id}")
+	public Response getRawDataPoints(@PathParam("id") String id,
 			@HeaderParam(value = "Authorization") String authorization,
 			@DefaultValue("1w-ago") @QueryParam("starttime") String starttime,
 			@DefaultValue("10000") @QueryParam("taglimit") String tagLimit,@DefaultValue("asc") @QueryParam("order") String tagorder);

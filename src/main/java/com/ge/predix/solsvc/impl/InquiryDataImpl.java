@@ -94,24 +94,7 @@ public class InquiryDataImpl implements InquiryDataAPI {
 	}
 
 	@Override
-	public Response getYearlyDataPoints(String id, String authorization, String starttime, String taglimit,
-			String tagorder) {
-		if (id == null) {
-			return null;
-		}
-
-		List<Header> headers = generateHeaders();
-
-		DatapointsQuery dpQuery = buildDatapointsQueryRequest(id, starttime, getInteger(taglimit), tagorder);
-		DatapointsResponse response = this.timeseriesFactory.queryForDatapoints(this.timeseriesRestConfig.getBaseUrl(),
-				dpQuery, headers);
-		log.debug(response.toString());
-
-		return handleResult(response);
-	}
-
-	@Override
-	public Response getWeeklyDataPoints(String id, String authorization, String starttime, String taglimit,
+	public Response getAggregationDataPoints(String id, String authorization, String starttime, String taglimit,
 			String tagorder) {
 		if (id == null) {
 			return null;
@@ -120,6 +103,23 @@ public class InquiryDataImpl implements InquiryDataAPI {
 		List<Header> headers = generateHeaders();
 
 		DatapointsQuery dpQuery = buildDatapointsQueryRequestWithAggregation(id, starttime, getInteger(taglimit), tagorder);
+		DatapointsResponse response = this.timeseriesFactory.queryForDatapoints(this.timeseriesRestConfig.getBaseUrl(),
+				dpQuery, headers);
+		log.debug(response.toString());
+
+		return handleResult(response);
+	}
+
+	@Override
+	public Response getRawDataPoints(String id, String authorization, String starttime, String taglimit,
+			String tagorder) {
+		if (id == null) {
+			return null;
+		}
+
+		List<Header> headers = generateHeaders();
+
+		DatapointsQuery dpQuery = buildDatapointsQueryRequest(id, starttime, getInteger(taglimit), tagorder);
 		DatapointsResponse response = this.timeseriesFactory.queryForDatapoints(this.timeseriesRestConfig.getBaseUrl(),
 				dpQuery, headers);
 		log.debug(response.toString());
@@ -223,17 +223,17 @@ public class InquiryDataImpl implements InquiryDataAPI {
 		// datapointsQuery.setStart("1y-ago"); //$NON-NLS-1$
 		String[] tagArray = id.split(","); //$NON-NLS-1$
 		List<String> entryTags = Arrays.asList(tagArray);
-		// Aggregation aggregation = new Aggregation();
-		// aggregation.setType("avg");
-		// aggregation.setInterval("1d");
-		// List<Aggregation> aggregations = new ArrayList<Aggregation>();
-		// aggregations.add(aggregation);
+		 Aggregation aggregation = new Aggregation();
+		 aggregation.setType("avg");
+		 aggregation.setInterval("1h");
+		 List<Aggregation> aggregations = new ArrayList<Aggregation>();
+		 aggregations.add(aggregation);
 		for (String entryTag : entryTags) {
 			com.ge.predix.timeseries.entity.datapoints.queryrequest.Tag tag = new com.ge.predix.timeseries.entity.datapoints.queryrequest.Tag();
 			tag.setName(entryTag);
 			tag.setLimit(taglimit);
 			tag.setOrder(tagorder);
-			// tag.setAggregations(aggregations);
+			tag.setAggregations(aggregations);
 			tags.add(tag);
 		}
 		datapointsQuery.setTags(tags);
@@ -248,10 +248,7 @@ public class InquiryDataImpl implements InquiryDataAPI {
 		return responseBuilder.build();
 	}
 
-	private Long generateTimestampsWithinYear(Long current) {
-		long yearInMMS = Long.valueOf(31536000000L);
-		return ThreadLocalRandom.current().nextLong(current - yearInMMS, current + 1);
-	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -303,65 +300,7 @@ public class InquiryDataImpl implements InquiryDataAPI {
 		return EntityUtils.toString(entity);
 	}
 
-	// @Override
-	// public Response getPm25DataGrid() {
-	// 	// TODO Auto-generated method stub
-	// 	return handleResult(createDataGrid());
-	// }
-
-// //	@SuppressWarnings({ "nls", "unchecked" })
-// 	private String createDataGrid() {
-// 		String newInfo = "";
-// 		StringBuilder dataJson = new StringBuilder("[");
-// 		List<Pm25Sensor> pm25s = new ArrayList<Pm25Sensor>();
-// 		for (int connectcount = 0; connectcount < 5; connectcount++) {
-// 			newInfo = getJsonContent("http://www.mypm25.cn/controlPoint?cityName=上海");
-// 			if (!newInfo.equals("")) {
-// 				for (int i = 0; i < 10; i++) {
-// 					Pm25Sensor pm25 = getPm25(newInfo, i);
-// 					pm25s.add(pm25);
-// 				}
-// 				Collections.sort(pm25s, new SortByName());
-// 				break;
-// 			}
-// 		}
-// 		for (Pm25Sensor element : pm25s) {
-// 			dataJson.append("{");
-// 			dataJson.append("\"Location\":\"");
-// 			dataJson.append(element.getCity() + element.getPointName());
-// 			dataJson.append("\",\"Measurement\":\"");
-// 			dataJson.append(element.getMeasure());
-// 			dataJson.append("\",\"Status\":\"");
-// 			if (element.getMeasure() <= 35) {
-// 				dataJson.append("GREEN");
-// 			}
-// 			else if(element.getMeasure()<=75){
-// 				dataJson.append("YELLOW");
-// 			}
-// 			else if(element.getMeasure()<=115){
-// 				dataJson.append("ORANGE");
-// 			}
-// 			else if(element.getMeasure()<=150){
-// 				dataJson.append("RED");
-// 			}
-// 			else if(element.getMeasure()<=250){
-// 				dataJson.append("VIOLET");
-// 			}
-// 			else{
-// 				dataJson.append("BROWN");
-// 			}
-// 			dataJson.append("\",\"UpdateTime\":\"");
-// 			dataJson.append(element.getUpdateTime());
-// 			dataJson.append("\",\"Latitude\":\"");
-// 			dataJson.append(element.getyValue().substring(0, 8));
-// 			dataJson.append("\",\"Longitude\":\"");
-// 			dataJson.append(element.getxValue().substring(0, 8));
-// 			dataJson.append("\"},");
-// 		}
-// 		dataJson.deleteCharAt(dataJson.length() - 1);
-// 		dataJson.append("]");
-// 		return dataJson.toString();
-// 	}
+	
 
 	public String getJsonContent(String urlStr) {
 		try {// 获取HttpURLConnection连接对象
@@ -391,25 +330,5 @@ public class InquiryDataImpl implements InquiryDataAPI {
 		}
 		return "";
 	}
-
-	// public Pm25Sensor getPm25(String jsonStr, int i) {
-	// 	Pm25Sensor pm25 = new Pm25Sensor();
-	// 	try {// 将json字符串转换为json对象
-	// 		JSONArray jsonArr = new JSONArray(jsonStr);
-	// 		JSONObject obj = (JSONObject) jsonArr.get(i);
-	// 		pm25.setCity(obj.getString("cityName"));
-	// 		pm25.setMeasure(obj.getInt("pm2_5"));
-	// 		pm25.setPointID(obj.getString("pointId"));
-	// 		pm25.setPointName(obj.getString("pointName"));
-	// 		pm25.setUpdateTime(obj.getString("updateTime"));
-	// 		pm25.setxValue(obj.getString("xValue"));
-	// 		pm25.setyValue(obj.getString("yValue"));
-	// 	} catch (JSONException e) {
-	// 		// TODO Auto-generated catch block
-	// 		e.printStackTrace();
-	// 	}
-	//
-	// 	return pm25;
-	// }
 
 }
